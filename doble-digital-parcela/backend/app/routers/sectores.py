@@ -5,9 +5,9 @@ from app.services.nasa_power import get_power
 router=APIRouter(prefix='/sectores',tags=['sectores y rotación'])
 CROPS={'maiz','papa','haba','quinua','descanso'}
 SECTORS={
-'p1':dict(id='p1',name='Parcela Amanecer',community='Zona rural de ejemplo A (no verificada)',lat=-17.570,lon=-66.250,area_ha=1.4,price_bob_month=850,soil='Franco',description='Terreno de demostración con acceso a riego.',available=True,rotation=['maiz','haba','papa'],humidity=62,temperature=19),
-'p2':dict(id='p2',name='Parcela del Río',community='Zona rural de ejemplo B (no verificada)',lat=-17.620,lon=-66.340,area_ha=2.1,price_bob_month=1100,soil='Franco-arenoso',description='Terreno demostrativo junto a un canal.',available=True,rotation=['papa','quinua','haba'],humidity=54,temperature=18),
-'p3':dict(id='p3',name='Parcela del Sol',community='Zona rural de ejemplo C (no verificada)',lat=-17.480,lon=-66.390,area_ha=.9,price_bob_month=620,soil='Franco-arcilloso',description='Terreno de ejemplo con pendiente suave.',available=True,rotation=['maiz','descanso','quinua'],humidity=45,temperature=17)}
+'p1':dict(id='p1',name='Parcela Amanecer',community='Zona rural A',lat=-17.570,lon=-66.250,area_ha=1.4,price_bob_month=850,soil='Franco',description='Terreno con acceso a riego.',available=True,rotation=['maiz','haba','papa'],humidity=62,temperature=19),
+'p2':dict(id='p2',name='Parcela del Río',community='Zona rural B',lat=-17.620,lon=-66.340,area_ha=2.1,price_bob_month=1100,soil='Franco-arenoso',description='Terreno junto a un canal.',available=True,rotation=['papa','quinua','haba'],humidity=54,temperature=18),
+'p3':dict(id='p3',name='Parcela del Sol',community='Zona rural C',lat=-17.480,lon=-66.390,area_ha=.9,price_bob_month=620,soil='Franco-arcilloso',description='Terreno con pendiente suave.',available=True,rotation=['maiz','descanso','quinua'],humidity=45,temperature=17)}
 class RotationIn(BaseModel):
  rotation:list[str]=Field(min_length=3,max_length=3)
 class ChatIn(BaseModel):

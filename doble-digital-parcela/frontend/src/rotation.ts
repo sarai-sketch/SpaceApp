@@ -1,11 +1,11 @@
 export type Crop = 'maiz'|'papa'|'haba'|'quinua'|'descanso';
 export type Rotation = [Crop,Crop,Crop];
-export const cropInfo:Record<Crop,{name:string;emoji:string;color:string;group:string;description:string}>={
- maiz:{name:'Maíz',emoji:'🌽',color:'#f5c951',group:'cereal',description:'Cereal que consume nutrientes'},
- papa:{name:'Papa',emoji:'🥔',color:'#ce976b',group:'tuberculo',description:'Tubérculo de gran importancia local'},
- haba:{name:'Haba',emoji:'🫛',color:'#76c66d',group:'leguminosa',description:'Leguminosa que puede contribuir al nitrógeno del suelo'},
- quinua:{name:'Quinua',emoji:'🌾',color:'#d99bca',group:'pseudocereal',description:'Cultivo andino; necesita manejo adaptado al lugar'},
- descanso:{name:'Cobertura',emoji:'🌿',color:'#69cda3',group:'cobertura',description:'Cobertura vegetal, no dejar suelo desnudo'}
+export const cropInfo:Record<Crop,{name:string;color:string;group:string;description:string}>={
+ maiz:{name:'Maíz',color:'#f5c951',group:'cereal',description:'Cereal que consume nutrientes'},
+ papa:{name:'Papa',color:'#ce976b',group:'tuberculo',description:'Tubérculo de gran importancia local'},
+ haba:{name:'Haba',color:'#76c66d',group:'leguminosa',description:'Leguminosa que puede contribuir al nitrógeno del suelo'},
+ quinua:{name:'Quinua',color:'#d99bca',group:'pseudocereal',description:'Cultivo andino; necesita manejo adaptado al lugar'},
+ descanso:{name:'Cobertura',color:'#69cda3',group:'cobertura',description:'Cobertura vegetal, no dejar suelo desnudo'}
 };
 export const crops=Object.keys(cropInfo) as Crop[];
 export const starter:Rotation[]=[['maiz','haba','papa'],['papa','quinua','haba'],['maiz','descanso','quinua']];

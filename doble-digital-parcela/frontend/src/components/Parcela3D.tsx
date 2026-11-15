@@ -38,5 +38,5 @@ function Farm({rotation,season,selected,onSelect,widthMeters,lengthMeters}:{rota
  </>
 }
 export default function Parcela3D({rotation,season,selected,onSelect,widthMeters=100,lengthMeters=100}:{rotation:Crop[];season:number;selected:number;onSelect:(i:number)=>void;widthMeters?:number;lengthMeters?:number}){
- return <div className="game-scene"><Canvas shadows camera={{position:[10,10,13],fov:39}} gl={{antialias:true}}><Farm rotation={rotation} season={season} selected={selected} onSelect={onSelect} widthMeters={widthMeters} lengthMeters={lengthMeters}/><OrbitControls enablePan={false} minDistance={9} maxDistance={24} maxPolarAngle={Math.PI/2.3} target={[0,.2,0]}/></Canvas><div className="scene-tip">👆 Toca una parcela para elegirla · Arrastra para girar</div></div>
+ return <div className="game-scene"><Canvas shadows camera={{position:[10,10,13],fov:39}} gl={{antialias:true}}><Farm rotation={rotation} season={season} selected={selected} onSelect={onSelect} widthMeters={widthMeters} lengthMeters={lengthMeters}/><OrbitControls enablePan={false} minDistance={9} maxDistance={24} maxPolarAngle={Math.PI/2.3} target={[0,.2,0]}/></Canvas><div className="scene-tip">Selecciona una parcela · Arrastra para girar</div></div>
 }
