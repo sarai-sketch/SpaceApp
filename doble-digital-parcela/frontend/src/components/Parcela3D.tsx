@@ -1,6 +1,42 @@
-import {Canvas} from '@react-three/fiber';import {OrbitControls,Text,Stars} from '@react-three/drei';import {useMemo} from 'react';import * as THREE from 'three';
-type Props={rain:number;temp:number;layer:string};
-function Plant({x,z,kind,stress}:{x:number;z:number;kind:number;stress:number}){const green=stress>.65?'#a88f45':stress>.3?'#81a83d':'#51b96c';return <group position={[x,0,z]}><mesh position={[0,.31,0]} castShadow><cylinderGeometry args={[.022,.04,.65,5]}/><meshStandardMaterial color="#3c7f35"/></mesh>{[-1,1].map((sign,i)=><mesh key={i} position={[sign*.15,.40+i*.12,0]} rotation={[0,0,sign*.55]}><sphereGeometry args={[.24,.055,.095,5,4]}/><meshStandardMaterial color={kind===1?'#9ed35c':green} side={THREE.DoubleSide}/></mesh>)}<mesh position={[0,.72,0]}><sphereGeometry args={[.10,.17,.10,6,6]}/><meshStandardMaterial color={kind===2?'#dbba56':green}/></mesh></group>}
-function Field({x,z,w,d,kind,stress}:{x:number;z:number;w:number;d:number;kind:number;stress:number}){const pts=useMemo(()=>{let p:{x:number;z:number}[]=[];for(let i=0;i<Math.floor(w/.44);i++)for(let j=0;j<Math.floor(d/.48);j++)p.push({x:-w/2+.27+i*.44,z:-d/2+.25+j*.48});return p},[w,d]);return <group position={[x,0,z]}><mesh position={[0,.055,0]} receiveShadow><boxGeometry args={[w,.12,d]}/><meshStandardMaterial color={kind===1?'#748d35':kind===2?'#866c39':'#486e2e'}/></mesh>{pts.map((p,i)=><Plant key={i} x={p.x} z={p.z} kind={kind} stress={stress}/>)}</group>}
-function Farm({rain,temp,layer}:Props){const stress=Math.max(0,Math.min(1,(temp<-3?.65:0)+(rain<-30?.4:0)));const plots=[[-4.4,-2.2,3.3,2.8,0],[-.7,-2.2,3.3,2.8,1],[3,-2.2,3.3,2.8,0],[-4.4,1.2,3.3,2.8,2],[-.7,1.2,3.3,2.8,0],[3,1.2,3.3,2.8,1]];return <><ambientLight intensity={1.15}/><directionalLight position={[5,12,6]} intensity={2.5} castShadow shadow-mapSize={[2048,2048]}/><hemisphereLight args={['#9ad4f2','#152a27',1.2]}/><Stars radius={80} depth={25} count={800} factor={2} saturation={0} fade/><mesh rotation={[-Math.PI/2,0,0]} position={[0,-.34,0]}><planeGeometry args={[200,200]}/><meshStandardMaterial color="#07192c"/></mesh><mesh position={[0,-.1,0]} receiveShadow><boxGeometry args={[12.6,.44,8.3]}/><meshStandardMaterial color="#3a5e3d"/></mesh><mesh position={[0,-.33,0]}><boxGeometry args={[12.85,.12,8.55]}/><meshStandardMaterial color="#11e5a0" emissive="#047e5c" emissiveIntensity={.5}/></mesh>{plots.map((p,i)=><Field key={i} x={p[0]} z={p[1]} w={p[2]} d={p[3]} kind={p[4]} stress={stress}/>)}{[-2.6,1.1].map((x,i)=><mesh key={i} position={[x,.08,0]}><boxGeometry args={[.22,.08,8]}/><meshStandardMaterial color="#b7a678"/></mesh>)}<mesh position={[0,.08,-.52]}><boxGeometry args={[12,.08,.18]}/><meshStandardMaterial color="#b7a678"/></mesh>{[[-4.3,-2.3],[-.5,1.2],[3.6,-1.8],[3,1.4]].map(([x,z],i)=><group key={i} position={[x,1.2,z]}><mesh><sphereGeometry args={[.16,12,12]}/><meshStandardMaterial color={i===2?'#ffc65b':'#00edba'} emissive={i===2?'#be7819':'#00c4a4'} emissiveIntensity={.7}/></mesh><mesh position={[0,-.45,0]}><cylinderGeometry args={[.015,.015,.8]}/><meshBasicMaterial color="#00efbf" transparent opacity={.7}/></mesh></group>)}{layer==='Temperatura'&&<mesh rotation={[-Math.PI/2,0,0]} position={[0,.12,0]}><planeGeometry args={[12,8]}/><meshBasicMaterial color={temp<-2?'#3da4f5':'#ffb347'} transparent opacity={.12} depthWrite={false}/></mesh>}{layer==='Humedad'&&<mesh rotation={[-Math.PI/2,0,0]} position={[0,.12,0]}><planeGeometry args={[12,8]}/><meshBasicMaterial color="#12cbe9" transparent opacity={.13} depthWrite={false}/></mesh>}<Text position={[0,.5,-4.65]} rotation={[-Math.PI/2,0,0]} fontSize={.32} color="#60f3c2">AGROFLUX · DIGITAL TWIN</Text></>}
-export default function Parcela3D(props:Props){return <div className="farm3d"><Canvas shadows camera={{position:[12,12,14],fov:38}} gl={{antialias:true}}><Farm {...props}/><OrbitControls makeDefault enablePan enableZoom minDistance={9} maxDistance={35} maxPolarAngle={Math.PI/2.1} target={[0,0,0]}/></Canvas><div className="scene-corner">◈ PARCELA DIGITAL <span>·</span> VISUALIZACIÓN 3D</div><div className="scene-help">Arrastra para girar · Rueda para acercar</div></div>}
+import {Canvas} from '@react-three/fiber';
+import {OrbitControls, Float} from '@react-three/drei';
+import {useMemo} from 'react';
+import type {Crop} from '../rotation';
+import * as THREE from 'three';
+function Sprout({x,z,crop}:{x:number;z:number;crop:Crop}){
+ const color=crop==='maiz'?'#54a943':crop==='papa'?'#70b65e':crop==='haba'?'#3fbf80':crop==='quinua'?'#bc77a4':'#79c5a4';
+ const height=crop==='maiz'?.72:crop==='quinua'?.65:crop==='haba'?.5:.38;
+ return <group position={[x,0,z]}>
+ <mesh position={[0,height/2,0]} castShadow><cylinderGeometry args={[.025,.035,height,6]}/><meshStandardMaterial color="#45873d"/></mesh>
+ {[-1,1].map((s,i)=><mesh key={i} position={[s*.12,height*.65+i*.03,0]} rotation={[0,0,s*.45]} castShadow><sphereGeometry args={[.20,.06,.10,8,6]}/><meshStandardMaterial color={color} side={THREE.DoubleSide}/></mesh>)}
+ {crop==='maiz'&&<mesh position={[0,height*.78,0]}><sphereGeometry args={[.085,.16,.085,8,8]}/><meshStandardMaterial color="#ffd34c"/></mesh>}
+ {crop==='quinua'&&<mesh position={[0,height+.06,0]}><sphereGeometry args={[.13,.19,.13,8,8]}/><meshStandardMaterial color="#db9bba"/></mesh>}
+ {crop==='papa'&&<mesh position={[0,.17,0]}><sphereGeometry args={[.13,.1,.13,8,8]}/><meshStandardMaterial color="#91c65c"/></mesh>}
+ </group>
+}
+function Plot({crop,x,z,selected,onClick}:{crop:Crop;x:number;z:number;selected:boolean;onClick:()=>void}){
+ const plants=useMemo(()=>Array.from({length:20},(_,i)=>({x:-1.16+(i%5)*.58,z:-.76+Math.floor(i/5)*.52})),[]);
+ return <group position={[x,0,z]} onClick={(e)=>{e.stopPropagation();onClick()}}>
+ <mesh position={[0,.07,0]} receiveShadow><boxGeometry args={[3.15,.26,2.45]}/><meshStandardMaterial color={selected?'#bb874d':'#94603c'}/></mesh>
+ <mesh position={[0,.19,0]} receiveShadow><boxGeometry args={[2.91,.06,2.22]}/><meshStandardMaterial color={crop==='descanso'?'#699f4e':'#78472c'}/></mesh>
+ {plants.map((v,i)=><Sprout key={i} {...v} crop={crop}/>)}
+ {selected&&<mesh position={[0,.02,0]}><boxGeometry args={[3.33,.07,2.63]}/><meshStandardMaterial color="#ffe275" emissive="#e5a32b" emissiveIntensity={.35}/></mesh>}
+ </group>
+}
+function Tree({x,z}:{x:number;z:number}){return <group position={[x,0,z]}><mesh position={[0,.48,0]} castShadow><cylinderGeometry args={[.12,.19,.95,8]}/><meshStandardMaterial color="#94643d"/></mesh><mesh position={[0,1.25,0]} castShadow><sphereGeometry args={[.65,12,10]}/><meshStandardMaterial color="#71bd58"/></mesh><mesh position={[.34,1.43,.13]} castShadow><sphereGeometry args={[.38,10,8]}/><meshStandardMaterial color="#8ed56b"/></mesh></group>}
+function Farm({rotation,season,selected,onSelect,widthMeters,lengthMeters}:{rotation:Crop[];season:number;selected:number;onSelect:(i:number)=>void;widthMeters:number;lengthMeters:number}){
+ const crops=rotation;
+ return <><color attach="background" args={['#b9eaff']}/><ambientLight intensity={1.5}/><hemisphereLight args={['#e4f8ff','#8eae65',1.6]}/><directionalLight position={[8,14,8]} intensity={2.2} castShadow shadow-mapSize={[1024,1024]}/>
+ <mesh rotation={[-Math.PI/2,0,0]} position={[0,-.5,0]} receiveShadow><planeGeometry args={[200,200]}/><meshStandardMaterial color="#a9d886"/></mesh>
+ <mesh position={[0,-.15,0]} receiveShadow><boxGeometry args={[widthMeters/10,.65,lengthMeters/10]}/><meshStandardMaterial color="#8dcb69"/></mesh>
+ <mesh position={[0,-.47,0]}><boxGeometry args={[widthMeters/10+.2,.14,lengthMeters/10+.2]}/><meshStandardMaterial color="#ad8251"/></mesh>
+ {[-3.35,0,3.35].map((x,i)=><Plot key={i} crop={crops[i]} x={x} z={0} selected={selected===i} onClick={()=>onSelect(i)}/>)}
+ {[-4.8,4.8].map((x,i)=><Tree key={i} x={x} z={-3.15}/>)}
+ {[-4.7,4.7].map((x,i)=><Tree key={'b'+i} x={x} z={3.3}/>)}
+ <mesh position={[0,.04,2.25]}><boxGeometry args={[9.8,.08,.7]}/><meshStandardMaterial color="#e4c48b"/></mesh>
+ <Float speed={1.5} rotationIntensity={0} floatIntensity={.15}><group position={[-4.9,1.7,1.8]}><mesh><sphereGeometry args={[.38,16,12]}/><meshStandardMaterial color="#f9f6ed"/></mesh><mesh position={[0,0,.31]}><sphereGeometry args={[.25,.19,.10,12,10]}/><meshStandardMaterial color="#8bd0e9"/></mesh><mesh position={[0,-.54,0]}><cylinderGeometry args={[.24,.34,.65,12]}/><meshStandardMaterial color="#f8f8f4"/></mesh></group></Float>
+ </>
+}
+export default function Parcela3D({rotation,season,selected,onSelect,widthMeters=100,lengthMeters=100}:{rotation:Crop[];season:number;selected:number;onSelect:(i:number)=>void;widthMeters?:number;lengthMeters?:number}){
+ return <div className="game-scene"><Canvas shadows camera={{position:[10,10,13],fov:39}} gl={{antialias:true}}><Farm rotation={rotation} season={season} selected={selected} onSelect={onSelect} widthMeters={widthMeters} lengthMeters={lengthMeters}/><OrbitControls enablePan={false} minDistance={9} maxDistance={24} maxPolarAngle={Math.PI/2.3} target={[0,.2,0]}/></Canvas><div className="scene-tip">👆 Toca una parcela para elegirla · Arrastra para girar</div></div>
+}
