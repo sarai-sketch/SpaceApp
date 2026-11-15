@@ -1,0 +1,2 @@
+export type Scenario={rain_change_pct:number;temp_delta_c:number;duration_days:number;baseline_rain_mm_day:number;baseline_temp_c:number;eto_mm_day:number};
+export type SimResult={daily:{day:number;rain_mm:number;depletion_mm:number;moisture_pct:number;temp_mean_c:number;water_stress:number}[];summary:{water_risk:string;cold_risk:string;available_water_mm:number;taw_mm:number;final_moisture_pct:number;rain_total_mm:number;final_temp_mean_c:number};assumptions:string[]};

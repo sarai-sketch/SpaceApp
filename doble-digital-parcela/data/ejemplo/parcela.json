@@ -1,0 +1,16 @@
+{
+  "id": "demo",
+  "name": "Parcela Andina Demo",
+  "latitude": -17.39,
+  "longitude": -66.16,
+  "area_ha": 12.5,
+  "crop": "maiz",
+  "stage": "vegetativo",
+  "is_synthetic": true,
+  "soil": {
+    "field_capacity": 0.3,
+    "wilting_point": 0.15,
+    "initial_moisture": 0.24,
+    "root_depth_m": 0.5
+  }
+}

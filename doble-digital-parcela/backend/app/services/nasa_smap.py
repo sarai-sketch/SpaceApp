@@ -1,0 +1,1 @@
+CATALOG={'source':'nasa_smap','url':'https://www.earthdata.nasa.gov/data/platforms/space-based-platforms/smap','status':'catalog_only','note':'SMAP requiere Earthdata y procesamiento geoespacial; resolución no parcelaria'}
